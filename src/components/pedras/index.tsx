@@ -11,8 +11,13 @@ type Props = {
 
 const Linha = styled('div', {
 	display: 'grid',
-	gridTemplateColumns: '1fr 1fr',
+	gridTemplateColumns: 'repeat(2, 1fr)',
 	gap: 8,
+
+	'@media (max-width: 875px)': {
+		flexDirection: 'column',
+		gridTemplateColumns: 'repeat(6, 1fr)',
+	},
 });
 
 export function Pedras(props: Props) {

@@ -7,15 +7,16 @@ import { usePedraSelecionadaStore } from '../../../core/pedra-selecionada'
 
 
 const Box = styled('div', {
-	width: 80,
-	height: 80,
+	flex: 1,
 	display: 'flex',
 	justifyContent: 'center',
 	alignItems: 'center',
 	textAlign: 'center',
+
 	'&:not(:last-of-type)': {
 		borderRight: '4px solid #3E2B21'
 	},
+
 	variants: {
 		liberada: {
 			true: {
@@ -54,6 +55,7 @@ export function Casa({ x, y, conteudo }: Props) {
 
 	return (
 		<Box
+			id={`${x}-${y}`}
 			liberada={liberada}
 			onClick={handleClick}
 		>

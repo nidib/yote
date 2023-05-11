@@ -4,13 +4,23 @@ import { Pedras } from './components/pedras';
 import { Board } from './components/tabuleiro';
 import { CorEnum } from './core/cor';
 
-
 const Box = styled('div', {
-	flex: 1,
+	height: '100%',
 	display: 'flex',
-	justifyContent: 'space-around',
+	justifyContent: 'center',
 	alignItems: 'center',
+	gap: 40,
+	padding: '100px 40px',
+
+	'@media (max-width: 875px)': {
+		flexDirection: 'column',
+	},
+
+	'@media (min-width: 580px) and (max-width: 875px)': {
+		paddingTop: 20,
+	},
 });
+
 
 export function App() {
 	return (
