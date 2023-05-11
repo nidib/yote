@@ -79,5 +79,3 @@ export const usePedrasStore = create(
 		}
 	}))
 )
-
-usePedrasStore.subscribe(state => console.log('pedras', state));

@@ -6,7 +6,7 @@ type PedraSelecionadaStore = {
 	pedraSelecionada: null | string;
 } & {
 	selecionar: (id: string) => void;
-	reset: () => void;
+	resetar: () => void;
 };
 
 export const usePedraSelecionadaStore = create(
@@ -17,7 +17,7 @@ export const usePedraSelecionadaStore = create(
 				state.pedraSelecionada = state.pedraSelecionada === id ? null : id
 			})
 		},
-		reset: () => set(state => {
+		resetar: () => set(state => {
 			state.pedraSelecionada = null;
 		}),
 	}))

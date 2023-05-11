@@ -4,6 +4,7 @@ import { Casa } from './casa';
 import { useTabulerioStore } from '../../core/tabuleiro';
 
 const Box = styled('div', {
+	overflow: 'hidden',
 	border: '4px solid #3E2B21',
 	boxShadow: '0px 4px 20px rgba(62, 43, 33, 0.3)',
 	borderRadius: 20,

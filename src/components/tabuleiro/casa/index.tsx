@@ -15,7 +15,15 @@ const Box = styled('div', {
 	textAlign: 'center',
 	'&:not(:last-of-type)': {
 		borderRight: '4px solid #3E2B21'
-	}
+	},
+	variants: {
+		liberada: {
+			true: {
+				cursor: 'pointer',
+				backgroundColor: '#E4C4A7',
+			},
+		},
+	},
 })
 
 interface Props extends Coord {
@@ -23,13 +31,13 @@ interface Props extends Coord {
 }
 
 export function Casa({ x, y, conteudo }: Props) {
-	const { mover } = useTabulerioStore();
-	const { pedraSelecionada, reset } = usePedraSelecionadaStore();
+	const { mover, obterCasasLiberadas } = useTabulerioStore();
+	const { pedraSelecionada } = usePedraSelecionadaStore();
 	const { pedras } = usePedrasStore();
-	const { atualizar } = usePedrasStore();
+	const liberada = obterCasasLiberadas().some(c => c.x === x && c.y === y);
 
 	const handleClick = () => {
-		if (!pedraSelecionada) {
+		if (!pedraSelecionada || !liberada) {
 			return;
 		}
 
@@ -42,12 +50,11 @@ export function Casa({ x, y, conteudo }: Props) {
 		const target = { x, y };
 
 		mover(pedraSelecionada, pedra.posicao.atual, target);
-		atualizar(pedraSelecionada, target);
-		reset();
 	}
 
 	return (
 		<Box
+			liberada={liberada}
 			onClick={handleClick}
 		>
 			{
