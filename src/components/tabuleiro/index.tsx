@@ -1,7 +1,8 @@
 import { styled } from '@stitches/react';
 
 import { Casa } from './casa';
-import { useTabulerioStore } from '../../core/tabuleiro';
+import { useTabuleiroStore } from '../../core/tabuleiro';
+import { usePedraSelecionadaStore } from '../../core/pedra-selecionada';
 
 const Box = styled('div', {
 	width: 600,
@@ -18,13 +19,16 @@ const Box = styled('div', {
 const Linha = styled('div', {
 	flex: 1,
 	display: 'flex',
+
 	'&:not(:last-of-type)': {
 		borderBottom: '4px solid #3E2B21'
 	}
 })
 
 export function Board() {
-	const { tabuleiro } = useTabulerioStore();
+	const { tabuleiro, obterCasasLiberadas } = useTabuleiroStore();
+	const casasLiberadas = obterCasasLiberadas();
+	usePedraSelecionadaStore()	
 
 	return (
 		<Box>
@@ -39,6 +43,7 @@ export function Board() {
 										x={x}
 										y={y}
 										conteudo={casa}
+										liberada={casasLiberadas.some(c => c.x === x && c.y === y)}
 									/>
 								)
 							})

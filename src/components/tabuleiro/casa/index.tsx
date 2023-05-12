@@ -2,7 +2,7 @@ import { styled } from '@stitches/react'
 
 import { Pedra } from '../../pedra'
 import { Coord, usePedrasStore } from '../../../core/pedras'
-import { useTabulerioStore } from '../../../core/tabuleiro'
+import { useTabuleiroStore } from '../../../core/tabuleiro'
 import { usePedraSelecionadaStore } from '../../../core/pedra-selecionada'
 
 
@@ -29,13 +29,14 @@ const Box = styled('div', {
 
 interface Props extends Coord {
 	conteudo: string | null
+	liberada: boolean
 }
 
-export function Casa({ x, y, conteudo }: Props) {
-	const { mover, obterCasasLiberadas } = useTabulerioStore();
+export function Casa({ x, y, conteudo, liberada }: Props) {
+	const { mover } = useTabuleiroStore();
 	const { pedraSelecionada } = usePedraSelecionadaStore();
 	const { pedras } = usePedrasStore();
-	const liberada = obterCasasLiberadas().some(c => c.x === x && c.y === y);
+	const temConteudo = typeof conteudo === 'string';
 
 	const handleClick = () => {
 		if (!pedraSelecionada || !liberada) {
@@ -60,7 +61,7 @@ export function Casa({ x, y, conteudo }: Props) {
 			onClick={handleClick}
 		>
 			{
-				typeof conteudo === 'string' ? <Pedra id={conteudo} /> : null
+				temConteudo ? <Pedra id={conteudo} /> : null
 			}
 		</Box>
 	)

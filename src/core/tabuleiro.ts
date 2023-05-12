@@ -1,13 +1,14 @@
-import { create } from 'zustand'
-import { immer } from 'zustand/middleware/immer'
+import { create } from 'zustand';
+import { immer } from 'zustand/middleware/immer';
 
-import { Coord, Pedra, usePedrasStore } from './pedras';
+import { Coord, usePedrasStore } from './pedras';
 import { usePedraSelecionadaStore } from './pedra-selecionada';
+import { Casas } from './casas';
 
 
-type Casa = null | string;
+export type Casa = null | string;
 
-type Tabuleiro = [
+export type Tabuleiro = [
 	[Casa, Casa, Casa, Casa, Casa, Casa],
 	[Casa, Casa, Casa, Casa, Casa, Casa],
 	[Casa, Casa, Casa, Casa, Casa, Casa],
@@ -32,19 +33,7 @@ function obterTabuleiroInicial(): Tabuleiro {
 	];
 }
 
-function obterCasasVaziasNoTabuleiroTodo(tabuleiro: Tabuleiro): Coord[] {
-	const casasLiberadas: Coord[] = [];
-
-	tabuleiro.forEach((linha, y) => linha.forEach((c, x) => {
-		if (!c) {
-			casasLiberadas.push({ x, y });
-		}
-	}));
-
-	return casasLiberadas;
-}
-
-export const useTabulerioStore = create(
+export const useTabuleiroStore = create(
 	immer<Store>((set, get) => ({
 		tabuleiro: obterTabuleiroInicial(),
 		obterCasasLiberadas: () => {
@@ -52,17 +41,7 @@ export const useTabulerioStore = create(
 			const { pedras } = usePedrasStore.getState();
 			const { tabuleiro } = get();
 
-			if (!pedraSelecionada) {
-				return [];
-			}
-
-			const pedra = pedras.get(pedraSelecionada) as Pedra;
-
-			if (!pedra.posicao.atual) {
-				return obterCasasVaziasNoTabuleiroTodo(tabuleiro);
-			}
-
-			return [];
+			return Casas.obterLiberadas(pedraSelecionada, pedras, tabuleiro);
 		},
 		mover: (id, de, para) => {
 			set(state => {
