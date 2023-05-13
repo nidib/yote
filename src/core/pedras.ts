@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
 import { Cor, CorEnum } from './cor';
-import {Tabuleiro, useTabuleiroStore} from './tabuleiro';
+import { Tabuleiro, useTabuleiroStore } from './tabuleiro';
 
 
 export type Coord = {
