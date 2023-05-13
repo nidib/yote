@@ -1,6 +1,9 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
+import { usePedrasStore } from './pedras.ts';
+import { useTurnoStore } from "./turno.ts";
+
 
 type PedraSelecionadaStore = {
 	pedraSelecionada: null | string;
@@ -14,7 +17,17 @@ export const usePedraSelecionadaStore = create(
 		pedraSelecionada: null,
 		selecionar: id => {
 			set(state => {
-				state.pedraSelecionada = state.pedraSelecionada === id ? null : id
+				const pedrasStore = usePedrasStore.getState();
+				const turnoStore = useTurnoStore.getState();
+
+				state.pedraSelecionada = state.pedraSelecionada === id ? null : id;
+
+				if (turnoStore.modoMorteLivre) {
+					state.pedraSelecionada = null;
+					pedrasStore.comer(id);
+					turnoStore.alternarJogador();
+					turnoStore.desativarModoMorteLivre();
+				}
 			})
 		},
 		resetar: () => set(state => {

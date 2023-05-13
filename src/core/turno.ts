@@ -3,15 +3,29 @@ import { immer } from 'zustand/middleware/immer';
 
 
 type TurnoStore = {
-	vezDoJogador: boolean
+	vezDoJogador: boolean;
+	modoMorteLivre: boolean;
 } & {
-	alternar: () => void;
+	ativarModoMorteLivre: () => void;
+	desativarModoMorteLivre: () => void;
+	alternarJogador: () => void;
 };
 
 export const useTurnoStore = create(
 	immer<TurnoStore>(set => ({
 		vezDoJogador: true,
-		alternar: () => {
+		modoMorteLivre: false,
+		ativarModoMorteLivre: () => {
+			set(state => {
+				state.modoMorteLivre = true;
+			})
+		},
+		desativarModoMorteLivre: () => {
+			set(state => {
+				state.modoMorteLivre = false;
+			})
+		},
+		alternarJogador: () => {
 			set(state => {
 				state.vezDoJogador = !state.vezDoJogador
 			})

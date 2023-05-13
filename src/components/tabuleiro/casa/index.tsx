@@ -2,8 +2,8 @@ import { styled } from '@stitches/react'
 
 import { Pedra } from '../../pedra'
 import { Coord, usePedrasStore } from '../../../core/pedras'
-import { useTabuleiroStore } from '../../../core/tabuleiro'
 import { usePedraSelecionadaStore } from '../../../core/pedra-selecionada'
+import {useMovimentacaoStore} from "../../../core/movimentacao.ts";
 
 
 const Box = styled('div', {
@@ -33,7 +33,7 @@ interface Props extends Coord {
 }
 
 export function Casa({ x, y, conteudo, liberada }: Props) {
-	const { mover } = useTabuleiroStore();
+	const { mover } = useMovimentacaoStore();
 	const { pedraSelecionada } = usePedraSelecionadaStore();
 	const { pedras } = usePedrasStore();
 	const temConteudo = typeof conteudo === 'string';
