@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
 import { Cor, CorEnum } from './cor';
-import { Tabuleiro } from './tabuleiro';
+import {Tabuleiro, useTabuleiroStore} from './tabuleiro';
 
 
 export type Coord = {
@@ -89,18 +89,22 @@ export const usePedrasStore = create(
 		pedras: obterPedrasIniciais(),
 		comer: id => {
 			set(state => {
+				const tabuleiroStore = useTabuleiroStore.getState();
 				const pedra = state.pedras.get(id);
 
-				if (!pedra) {
-					throw new Error('Pedra não existe');
+				if (pedra && pedra.posicao.atual) {
+					const { x, y } = pedra.posicao.atual;
+
+					tabuleiroStore.definirValorNaCasa(x, y, null);
+					pedra.viva = false;
+					pedra.posicao.atual = null;
 				}
 
-				pedra.viva = false;
-				pedra.posicao.atual = null;
 			})
 		},
 		atualizar: (id, coord) => {
 			set(state => {
+				const tabuleiroStore = useTabuleiroStore.getState();
 				const pedra = state.pedras.get(id);
 
 				if (!pedra) {
@@ -109,6 +113,7 @@ export const usePedrasStore = create(
 
 				const posicaoAtual = pedra.posicao.atual;
 
+				tabuleiroStore.definirValorNaCasa(coord.x, coord.y, id);
 				pedra.posicao.anterior = posicaoAtual;
 				pedra.posicao.atual = coord;
 			})
