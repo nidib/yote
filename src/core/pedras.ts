@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
 import { Cor, CorEnum } from './cor';
+import { Tabuleiro } from './tabuleiro';
 
 
 export type Coord = {
@@ -23,6 +24,7 @@ export type Pedra = {
 type PedrasStore = {
 	pedras: Map<string, Pedra>
 } & {
+	comer: (id: string) => void
 	atualizar: (id: string, coord: Coord) => void
 };
 
@@ -60,9 +62,43 @@ function obterPedrasIniciais(): Map<string, Pedra> {
 	return pedras;
 }
 
+export function obterPedraComida(de: Coord, para: Coord, pedras: Map<string, Pedra>, tabuleiro: Tabuleiro): null | Pedra {
+	const diferencaHorizontal = de.x - para.x;
+	const diferencaVertical = de.y - para.y;
+	let pedraComidaId: null | string = null;
+
+	if (Math.abs(diferencaHorizontal) === 2) {
+		if (diferencaHorizontal > 0) {
+			pedraComidaId = tabuleiro[de.y][de.x - 1];
+		} else {
+			pedraComidaId = tabuleiro[de.y][de.x + 1];
+		}
+	} else if (Math.abs(diferencaVertical) === 2) {
+		if (diferencaVertical > 0) {
+			pedraComidaId = tabuleiro[de.y - 1][de.x];
+		} else {
+			pedraComidaId = tabuleiro[de.y + 1][de.x];
+		}
+	}
+
+	return pedraComidaId ? pedras.get(pedraComidaId) as Pedra : null;
+}
+
 export const usePedrasStore = create(
 	immer<PedrasStore>(set => ({
 		pedras: obterPedrasIniciais(),
+		comer: id => {
+			set(state => {
+				const pedra = state.pedras.get(id);
+
+				if (!pedra) {
+					throw new Error('Pedra não existe');
+				}
+
+				pedra.viva = false;
+				pedra.posicao.atual = null;
+			})
+		},
 		atualizar: (id, coord) => {
 			set(state => {
 				const pedra = state.pedras.get(id);

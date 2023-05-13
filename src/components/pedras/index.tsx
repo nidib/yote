@@ -32,6 +32,8 @@ export function Pedras(props: Props) {
 
 						if (pedra.posicao.atual) return false;
 
+						if (!pedra.viva) return false;
+
 						return true;
 					})
 					.map(pedra => (

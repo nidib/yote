@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
-import { Coord, usePedrasStore } from './pedras';
+import { Coord, obterPedraComida, usePedrasStore } from './pedras';
 import { usePedraSelecionadaStore } from './pedra-selecionada';
 import { Casas } from './casas';
 
@@ -48,14 +48,21 @@ export const useTabuleiroStore = create(
 				const pedras = usePedrasStore.getState();
 				const pedraSelecionada = usePedraSelecionadaStore.getState();
 
-				if (de) {
-					state.tabuleiro[de.y][de.x] = null;
-				}
-
 				state.tabuleiro[para.y][para.x] = id;
 
 				pedras.atualizar(id, para);
 				pedraSelecionada.resetar();
+
+				if (de) {
+					state.tabuleiro[de.y][de.x] = null;
+
+					const pedraComida = obterPedraComida(de, para, pedras.pedras, state.tabuleiro);
+
+					if (pedraComida && pedraComida.posicao.atual) {
+						state.tabuleiro[pedraComida.posicao.atual.y][pedraComida.posicao.atual.x] = null;
+						pedras.comer(pedraComida.id);
+					}
+				}
 			})
 		},
 	}))
