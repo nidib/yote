@@ -36,9 +36,7 @@ export function Pedras(props: Props) {
 
 						return true;
 					})
-					.map(pedra => (
-						<Pedra key={pedra.id} id={pedra.id} />
-					))
+					.map(pedra => <Pedra key={pedra.id} id={pedra.id} />)
 			}
 		</Linha>
 	)

@@ -1,8 +1,12 @@
+import { useEffect } from 'react';
 import { styled } from '@stitches/react';
 
 import { Pedras } from './components/pedras';
 import { Board } from './components/tabuleiro';
 import { CorEnum } from './core/cor';
+import { useTurnoStore } from './core/turno';
+import { useAIStore } from './core/ai';
+
 
 const Box = styled('div', {
 	height: '100%',
@@ -21,8 +25,18 @@ const Box = styled('div', {
 	},
 });
 
+const estaJogandoContraMaquina = true;
 
 export function App() {
+	const { vezDoJogador } = useTurnoStore();
+	const { jogar } = useAIStore();
+
+	useEffect(() => {
+		if (estaJogandoContraMaquina && !vezDoJogador) {
+			jogar();
+		}
+	}, [vezDoJogador]);
+
 	return (
 		<Box>
 			<Pedras cor={CorEnum.PRETA} />

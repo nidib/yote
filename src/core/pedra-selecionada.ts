@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
-import { usePedrasStore } from './pedras.ts';
-import { useTurnoStore } from "./turno.ts";
+import { usePedrasStore } from './pedras';
+import { useTurnoStore } from "./turno";
 
 
 type PedraSelecionadaStore = {

@@ -1,9 +1,10 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
-import { Coord, usePedrasStore } from './pedras';
+import { Coord, Pedra, usePedrasStore } from './pedras';
 import { usePedraSelecionadaStore } from './pedra-selecionada';
 import { Casas } from './casas';
+import { CorEnum} from './cor';
 
 
 export type Casa = null | string;
@@ -31,6 +32,30 @@ function obterTabuleiroInicial(): Tabuleiro {
 		[null, null, null, null, null, null],
 		[null, null, null, null, null, null],
 	];
+}
+
+export function obterPedrasDoTabuleiro(tabuleiro: Tabuleiro, pilha: Map<string, Pedra>): Pedra[] {
+	const pedras: Pedra[] = [];
+
+	tabuleiro.forEach(linha => linha.forEach(casa => {
+		if (!casa) {
+			return;
+		}
+
+		const pedra = pilha.get(casa);
+
+		if (!pedra) {
+			return;
+		}
+
+		if (pedra.cor !== CorEnum.BRANCA) {
+			return;
+		}
+
+		pedras.push(pedra);
+	}));
+
+	return pedras;
 }
 
 export const useTabuleiroStore = create(

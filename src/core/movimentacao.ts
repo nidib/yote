@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
-import { Coord, obterPedraComida, usePedrasStore } from './pedras.ts';
-import { usePedraSelecionadaStore } from './pedra-selecionada.ts';
-import { useTurnoStore } from './turno.ts';
-import { useTabuleiroStore } from './tabuleiro.ts';
+import { Coord, obterPedraComida, usePedrasStore } from './pedras';
+import { usePedraSelecionadaStore } from './pedra-selecionada';
+import { useTurnoStore } from './turno';
+import { useTabuleiroStore } from './tabuleiro';
 
 
 type Store = {
@@ -29,11 +29,18 @@ export const useMovimentacaoStore = create(
 
 			tabuleiroStore.definirValorNaCasa(de.x, de.y, null);
 
-			const pedraComida = obterPedraComida(de, para, pedrasStore.pedras, tabuleiroStore.tabuleiro);
+			const pedraASerComida = obterPedraComida(de, para, pedrasStore.pedras, tabuleiroStore.tabuleiro);
 
-			if (pedraComida) {
-				pedrasStore.comer(pedraComida.id);
-				turnoStore.ativarModoMorteLivre();
+			if (pedraASerComida) {
+				pedrasStore.comer(pedraASerComida.id);
+
+				const temPedraPraComer = pedrasStore.obterPedrasVivas().filter(pedra => pedra.cor === pedraASerComida.cor && pedra.posicao.atual)
+
+				if (temPedraPraComer.length) {
+					turnoStore.ativarModoMorteLivre();
+				} else {
+					turnoStore.alternarJogador();
+				}
 			} else {
 				turnoStore.alternarJogador();
 			}

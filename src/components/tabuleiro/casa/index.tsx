@@ -3,7 +3,7 @@ import { styled } from '@stitches/react'
 import { Pedra } from '../../pedra'
 import { Coord, usePedrasStore } from '../../../core/pedras'
 import { usePedraSelecionadaStore } from '../../../core/pedra-selecionada'
-import {useMovimentacaoStore} from "../../../core/movimentacao.ts";
+import { useMovimentacaoStore } from "../../../core/movimentacao";
 
 
 const Box = styled('div', {

@@ -6,15 +6,17 @@ type TurnoStore = {
 	vezDoJogador: boolean;
 	modoMorteLivre: boolean;
 } & {
+	obterModoMorteLivre: () => boolean;
 	ativarModoMorteLivre: () => void;
 	desativarModoMorteLivre: () => void;
 	alternarJogador: () => void;
 };
 
 export const useTurnoStore = create(
-	immer<TurnoStore>(set => ({
+	immer<TurnoStore>((set, get) => ({
 		vezDoJogador: true,
 		modoMorteLivre: false,
+		obterModoMorteLivre: () => get().modoMorteLivre,
 		ativarModoMorteLivre: () => {
 			set(state => {
 				state.modoMorteLivre = true;

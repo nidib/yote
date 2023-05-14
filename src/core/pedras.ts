@@ -24,6 +24,8 @@ export type Pedra = {
 type PedrasStore = {
 	pedras: Map<string, Pedra>
 } & {
+	obterPedrasVivas: () => Pedra[]
+	obterPedra: (id: string) => null | Pedra
 	comer: (id: string) => void
 	atualizar: (id: string, coord: Coord) => void
 };
@@ -85,8 +87,15 @@ export function obterPedraComida(de: Coord, para: Coord, pedras: Map<string, Ped
 }
 
 export const usePedrasStore = create(
-	immer<PedrasStore>(set => ({
+	immer<PedrasStore>((set, get) => ({
 		pedras: obterPedrasIniciais(),
+		obterPedras: () => get().pedras,
+		obterPedrasVivas: () => {
+			return Array
+				.from(get().pedras.values())
+				.filter(pedra => pedra.viva);
+		},
+		obterPedra: id => get().pedras.get(id) ?? null,
 		comer: id => {
 			set(state => {
 				const tabuleiroStore = useTabuleiroStore.getState();
