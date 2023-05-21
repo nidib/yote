@@ -6,6 +6,7 @@ import { Board } from './components/tabuleiro';
 import { CorEnum } from './core/cor';
 import { useTurnoStore } from './core/turno';
 import { useAIStore } from './core/ai';
+import { DevTools } from './components/devtools';
 
 
 const Box = styled('div', {
@@ -25,23 +26,25 @@ const Box = styled('div', {
 	},
 });
 
-const estaJogandoContraMaquina = true;
-
 export function App() {
+	const { habilitado } = useAIStore();
 	const { vezDoJogador } = useTurnoStore();
 	const { jogar } = useAIStore();
 
 	useEffect(() => {
-		if (estaJogandoContraMaquina && !vezDoJogador) {
+		if (habilitado && !vezDoJogador) {
 			jogar();
 		}
-	}, [vezDoJogador]);
+	}, [vezDoJogador, habilitado]);
 
 	return (
-		<Box>
-			<Pedras cor={CorEnum.PRETA} />
-			<Board />
-			<Pedras cor={CorEnum.BRANCA} />
-		</Box>
+		<>
+			<DevTools />
+			<Box>
+				<Pedras cor={CorEnum.PRETA} />
+				<Board />
+				<Pedras cor={CorEnum.BRANCA} />
+			</Box>
+		</>
 	);
 }

@@ -10,6 +10,10 @@ import { useTurnoStore } from './turno';
 
 
 type Store = {
+	habilitado: boolean;
+} & {
+	habilitar: () => void;
+	desabilitar: () => void;
 	jogar: () => void;
 };
 
@@ -21,7 +25,7 @@ interface Decisoes {
 
 	escolherPedra(pilhaOuTabuleiro: 'PILHA' | 'TABULEIRO', pilha: Map<string, Pedra>, tabuleiro: Tabuleiro): Pedra;
 
-	escolherDestino(casasSelecionaveis: Coord[]): Coord;
+	escolherDestino(casasSelecionaveis: Coord[]): null | Coord;
 
 	escolherPedraDaMorteLivre(pedrasDisponiveis: Pedra[]): null | Pedra;
 
@@ -64,7 +68,7 @@ const decisoesPorNivel: Record<Dificuldade, Decisoes> = {
 			return escolherItemAleatorio(pedrasBrancasDoTabuleiro);
 		},
 		escolherDestino(casasSelecionaveis: Coord[]): Coord {
-			return escolherItemAleatorio(casasSelecionaveis);
+			return escolherItemAleatorio(casasSelecionaveis) ?? null;
 		},
 		escolherPedraDaMorteLivre(pedrasDisponiveis: Pedra[]): null | Pedra {
 			if (!escolherItemAleatorio([true, false])) {
@@ -79,7 +83,14 @@ const decisoesPorNivel: Record<Dificuldade, Decisoes> = {
 const nivel = 'FACIL';
 
 export const useAIStore = create(
-	immer<Store>(() => ({
+	immer<Store>(set => ({
+		habilitado: true,
+		habilitar: () => set(state => {
+			state.habilitado= true;
+		}),
+		desabilitar: () => set(state => {
+			state.habilitado= false;
+		}),
 		jogar() {
 			const tabuleiroStore = useTabuleiroStore.getState();
 			const pedrasStore = usePedrasStore.getState();
@@ -88,11 +99,14 @@ export const useAIStore = create(
 			const turnoStore = useTurnoStore.getState();
 			const decisoes = decisoesPorNivel[nivel] as Decisoes;
 			const pilhaOuTabuleiro = decisoes.escolherEntrePilhaETabuleiro(pedrasStore.pedras, tabuleiroStore.tabuleiro);
-			const pedra = decisoes.escolherPedra(pilhaOuTabuleiro, pedrasStore.pedras, tabuleiroStore.tabuleiro);
+			let pedra: null | Pedra = null;
+			let casa: null | Coord = null;
 
-			pedraSelecionadaStore.selecionar(pedra.id);
-
-			const casa = decisoes.escolherDestino(tabuleiroStore.obterCasasLiberadas());
+			while (!casa || !pedra) {
+				pedra = decisoes.escolherPedra(pilhaOuTabuleiro, pedrasStore.pedras, tabuleiroStore.tabuleiro);
+				pedraSelecionadaStore.selecionar(pedra.id);
+				casa = decisoes.escolherDestino(tabuleiroStore.obterCasasLiberadas());
+			}
 
 			movimentacaoStore.mover(pedra.id, pedra.posicao.atual, casa);
 
