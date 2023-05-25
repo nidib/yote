@@ -7,10 +7,13 @@ import { useTurnoStore } from '../../core/turno';
 
 
 const Bolinha = styled('div', {
-	width: 40,
-	height: 40,
+	width: 50,
+	height: 50,
 	borderRadius: 999,
 	border: '2px solid transparent',
+	backgroundSize: 'contain',
+	backgroundRepeat: 'no-repeat',
+	backgroundPosition: 'center',
 	variants: {
 		selectable: {
 			true: {
@@ -24,12 +27,10 @@ const Bolinha = styled('div', {
 		},
 		cor: {
 			branca: {
-				backgroundColor: 'white',
-				borderColor: 'black' 
+				backgroundImage: 'url(/public/inimigo.png)',
 			},
 			preta: {
-				backgroundColor: '#3B2C22',
-				borderColor: 'black'
+				backgroundImage: 'url(/public/amigo.png)',
 			},
 		},
 	},
