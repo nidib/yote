@@ -4,6 +4,8 @@ import { Cor, CorEnum } from '../../core/cor';
 import { usePedrasStore } from '../../core/pedras';
 import { usePedraSelecionadaStore } from '../../core/pedra-selecionada';
 import { useTurnoStore } from '../../core/turno';
+import iconeInimigo from '../../assets/inimigo.png'
+import iconeAmigo from '../../assets/amigo.png'
 
 
 const Bolinha = styled('div', {
@@ -27,10 +29,10 @@ const Bolinha = styled('div', {
 		},
 		cor: {
 			branca: {
-				backgroundImage: 'url(/public/inimigo.png)',
+				backgroundImage: `url(${iconeInimigo})`,
 			},
 			preta: {
-				backgroundImage: 'url(/public/amigo.png)',
+				backgroundImage: `url(${iconeAmigo})`,
 			},
 		},
 	},
